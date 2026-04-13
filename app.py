@@ -245,6 +245,18 @@ article_top = (
     .reset_index(drop=True)
 )
 
+# Ajouter le libellé article correspondant
+libelles_articles = (
+    base_filtre[["Code article", "Libellé article"]]
+    .drop_duplicates()
+)
+
+article_top = article_top.merge(
+    libelles_articles,
+    on="Code article",
+    how="left"
+)
+
 of_top = (
     series_of_global.groupby("OF")["Nombre series"]
     .sum()
@@ -257,6 +269,7 @@ moule_top_val = moule_top.iloc[0]["Moule"] if len(moule_top) > 0 else "-"
 moule_top_n = int(moule_top.iloc[0]["Nombre"]) if len(moule_top) > 0 else 0
 
 article_top_val = article_top.iloc[0]["Code article"] if len(article_top) > 0 else "-"
+article_top_libelle = article_top.iloc[0]["Libellé article"] if len(article_top) > 0 else "-"
 article_top_n = int(article_top.iloc[0]["Nombre"]) if len(article_top) > 0 else 0
 
 of_top_val = of_top.iloc[0]["OF"] if len(of_top) > 0 else "-"
@@ -265,7 +278,11 @@ of_top_n = int(of_top.iloc[0]["Nombre"]) if len(of_top) > 0 else 0
 st.subheader("Indicateurs métier")
 k1, k2, k3 = st.columns(3)
 k1.metric("Moule le plus monté", moule_top_val, delta=f"{moule_top_n} fois")
-k2.metric("Article le plus utilisé", article_top_val, delta=f"{article_top_n} fois")
+k2.metric(
+    "Article le plus utilisé",
+    f"{article_top_val} - {article_top_libelle}",
+    delta=f"{article_top_n} fois"
+)
 k3.metric("OF le plus fréquent", of_top_val, delta=f"{of_top_n} fois")
 
 st.divider()
