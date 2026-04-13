@@ -67,7 +67,7 @@ def compter_series_par_machine(df, colonne_element):
 
 @st.cache_data
 def charger_et_nettoyer_donnees(fichier_excel):
-    df = pd.read_excel(fichier_excel)
+    df = pd.read_excel(fichier_excel, engine="openpyxl")
 
     # =========================
     # 1er nettoyage métier
