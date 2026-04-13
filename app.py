@@ -278,11 +278,24 @@ of_top_n = int(of_top.iloc[0]["Nombre"]) if len(of_top) > 0 else 0
 st.subheader("Indicateurs métier")
 k1, k2, k3 = st.columns(3)
 k1.metric("Moule le plus monté", moule_top_val, delta=f"{moule_top_n} fois")
-k2.metric(
-    "Article le plus utilisé",
-    f"{article_top_val} - {article_top_libelle}",
-    delta=f"{article_top_n} fois"
-)
+with k2:
+    st.markdown("**Article le plus utilisé**")
+    st.markdown(
+        f"""
+        <div title="{article_top_libelle}" style="font-size: 2rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            {article_top_val} - {article_top_libelle}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    st.markdown(
+        f"""
+        <div style="display:inline-block; padding:6px 10px; border-radius:999px; background:#E8F5E9; color:#1B5E20; font-size:1rem;">
+            ↑ {article_top_n} fois
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 k3.metric("OF le plus fréquent", of_top_val, delta=f"{of_top_n} fois")
 
 st.divider()
