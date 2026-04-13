@@ -378,30 +378,53 @@ with tab5:
 
     if valeur_recherche:
         if type_recherche == "Article":
-            resultat = base_recherche[
-                base_recherche["Code article"].astype(str).str.contains(valeur_recherche.strip(), case=False, na=False)
+            resume_machine = compter_series_par_machine(base_filtre, "Code article")
+            resume_machine = resume_machine[
+                resume_machine["Code article"].astype(str).str.contains(
+                    valeur_recherche.strip(),
+                    case=False,
+                    na=False
+                )
             ].copy()
-            colonne = "Code article"
+
+            resume_machine = resume_machine.rename(columns={"Nombre series": "Nombre de fois"})
+            resume_machine = resume_machine.sort_values(
+                by=["Nombre de fois", "Machine"],
+                ascending=[False, True]
+            ).reset_index(drop=True)
 
         elif type_recherche == "OF":
-            resultat = base_recherche[
-                base_recherche["OF"].astype(str).str.strip() == valeur_recherche.strip()
+            resume_machine = compter_series_par_machine(base_filtre, "OF")
+            resume_machine = resume_machine[
+                resume_machine["OF"].astype(str).str.strip() == valeur_recherche.strip()
             ].copy()
-            colonne = "OF"
+
+            resume_machine = resume_machine.rename(columns={"Nombre series": "Nombre de fois"})
+            resume_machine = resume_machine.sort_values(
+                by=["Nombre de fois", "Machine"],
+                ascending=[False, True]
+            ).reset_index(drop=True)
 
         else:
-            resultat = base_recherche[
-                base_recherche["Moule"].astype(str).str.contains(valeur_recherche.strip(), case=False, na=False)
+            resume_machine = compter_series_par_machine(base_filtre, "Moule")
+            resume_machine = resume_machine[
+                resume_machine["Moule"].astype(str).str.contains(
+                    valeur_recherche.strip(),
+                    case=False,
+                    na=False
+                )
             ].copy()
-            colonne = "Moule"
 
-        if len(resultat) == 0:
+            resume_machine = resume_machine.rename(columns={"Nombre series": "Nombre de fois"})
+            resume_machine = resume_machine.sort_values(
+                by=["Nombre de fois", "Machine"],
+                ascending=[False, True]
+            ).reset_index(drop=True)
+
+        if len(resume_machine) == 0:
             st.warning("Aucun résultat trouvé.")
         else:
-            resume_machine = compter_series_par_machine(resultat, colonne)
-            resume_machine = resume_machine.rename(columns={"Nombre series": "Nombre de fois"})
             st.dataframe(resume_machine, use_container_width=True)
-
 with tab6:
     st.subheader("Diagrammes globaux")
 
