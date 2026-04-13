@@ -116,8 +116,15 @@ def charger_et_nettoyer_donnees(fichier_excel):
         "Machine"
     ]
 
-    for col in ["OF", "Code article", "Libellé article", "Moule", "Machine"]:
+    for col in ["OF", "Code article", "Libellé article", "Moule"]:
         base_recherche[col] = nettoyer_texte(base_recherche[col])
+
+    base_recherche["Machine"] = (
+        base_recherche["Machine"]
+        .astype(str)
+        .str.strip()
+        .str.replace(".0", "", regex=False)
+    )
 
     base_recherche = base_recherche.replace(r'^\s*$', pd.NA, regex=True)
 
